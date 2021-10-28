@@ -4,11 +4,8 @@ import android.os.Bundle
 import android.widget.FrameLayout
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.FragmentContainer
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 
-abstract class MainActivity : AppCompatActivity(), recyclingAdapter.OnItemClickListener {
+abstract class MainActivity : AppCompatActivity(){
 
     var bookList = BookList() // how to init my own object/class item
     abstract var container2present: Boolean // check for container 2
@@ -22,11 +19,11 @@ abstract class MainActivity : AppCompatActivity(), recyclingAdapter.OnItemClickL
 
         if(savedInstanceState == null){
             createBooklists() // init the array list
-            val recyclerView = findViewById<RecyclerView>(R.id.recycler)
-            recyclerView.adapter = adapting
-            recyclerView.layoutManager = GridLayoutManager(this, 1,
-                GridLayoutManager.VERTICAL, false)
-            recyclerView.setHasFixedSize(true)
+//            val recyclerView = findViewById<RecyclerView>(R.id.recycler)
+//            recyclerView.adapter = adapting
+//            recyclerView.layoutManager = GridLayoutManager(this, 1,
+//                GridLayoutManager.VERTICAL, false)
+//            recyclerView.setHasFixedSize(true)
 
 
         }else{
@@ -52,10 +49,5 @@ abstract class MainActivity : AppCompatActivity(), recyclingAdapter.OnItemClickL
         }
     }
 
-    override fun onItemClick(position: Int) { // send to bookdetails fragment
-//        val secondActivityIntent = Intent(this@SelectionActivity, DisplayActivity::class.java)
-//        secondActivityIntent.putExtra("String", imageArray[position].description)
-//        startActivity(secondActivityIntent)
-    }
 
 }

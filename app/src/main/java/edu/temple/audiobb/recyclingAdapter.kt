@@ -7,10 +7,10 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
-class recyclingAdapter(private val _list: BookList, private val listener: OnItemClickListener): RecyclerView.Adapter<recyclingAdapter.MyViewHolder>(){
+class recyclingAdapter(private val _list: BookList): RecyclerView.Adapter<recyclingAdapter.MyViewHolder>(){
 
 
-    inner class MyViewHolder (_myLayout : View) : RecyclerView.ViewHolder(_myLayout), View.OnClickListener {
+    inner class MyViewHolder (_myLayout : View) : RecyclerView.ViewHolder(_myLayout){
         val title = _myLayout.findViewById<TextView>(R.id.textView1)
         val author = _myLayout.findViewById<TextView>(R.id.textView2)
 
@@ -22,15 +22,15 @@ class recyclingAdapter(private val _list: BookList, private val listener: OnItem
             author.setTextColor(Color.BLACK)
             author.textSize = 10f
 
-            _myLayout.setOnClickListener(this)
+            //_myLayout.setOnClickListener(this)
         }
 
-        override fun onClick(v: View?) { // forwards click events to main
-            val position = adapterPosition
-            if(position != RecyclerView.NO_POSITION){
-                listener.onItemClick(position)
-            }
-        }
+//        override fun onClick(v: View?) { // forwards click events to main
+//            val position = adapterPosition
+//            if(position != RecyclerView.NO_POSITION){
+//                listener.onItemClick(position)
+//            }
+//        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): recyclingAdapter.MyViewHolder {
@@ -46,7 +46,7 @@ class recyclingAdapter(private val _list: BookList, private val listener: OnItem
 
     override fun getItemCount() = _list.size()
 
-    interface OnItemClickListener{
-        fun onItemClick(position: Int)
-    }
+//    interface OnItemClickListener{
+//        fun onItemClick(position: Int)
+//    }
 }
