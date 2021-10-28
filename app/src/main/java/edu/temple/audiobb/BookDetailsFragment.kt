@@ -111,6 +111,20 @@ class BookDetailsFragment() : Fragment(), Parcelable {
         override fun newArray(size: Int): Array<BookDetailsFragment?> {
             return arrayOfNulls(size)
         }
+
+        fun newInstance(book: Book): Fragment {
+            TODO("Not yet implemented")
+        }
+
+    }
+
+    fun newInstance(book: Book?): BookDetailsFragment {
+        val fragment = BookDetailsFragment()
+        val args = Bundle()
+        args.putBoolean("yes", true)
+        args.putParcelable("newbook", book)
+        fragment.setArguments(args)
+        return fragment
     }
 
 }
