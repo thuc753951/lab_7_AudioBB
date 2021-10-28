@@ -19,8 +19,8 @@ class BookList() : Parcelable{
         bookList.remove(book)
     }
 
-    fun get(postion: Int){
-        bookList.get(postion)
+    fun get(postion: Int): Book{
+        return bookList[postion]
     }
 
     fun size(): Int{
