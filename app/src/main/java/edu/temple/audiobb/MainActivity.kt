@@ -24,7 +24,7 @@ class MainActivity : AppCompatActivity() {
 
 
     }
-    fun createBooklists() { // initialize data
+    fun createBooklists() { // initialize data, WORKSSSS
 
         //all arrays are 10 in size/length
         //BookList list = new BookList();
