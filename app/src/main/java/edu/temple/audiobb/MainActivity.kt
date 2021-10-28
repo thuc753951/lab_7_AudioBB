@@ -9,7 +9,6 @@ abstract class MainActivity : AppCompatActivity(){
 
     var bookList = BookList() // how to init my own object/class item
     abstract var container2present: Boolean // check for container 2
-    val adapting = recyclingAdapter(bookList, this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

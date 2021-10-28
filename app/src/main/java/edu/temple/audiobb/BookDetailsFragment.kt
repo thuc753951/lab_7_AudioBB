@@ -1,32 +1,55 @@
 package edu.temple.audiobb
 
+import android.content.Context
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import android.os.Parcel
+import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
+import androidx.fragment.app.Fragment
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
 
-/**
- * A simple [Fragment] subclass.
- * Use the [BookDetailsFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
-class BookDetailsFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+class BookDetailsFragment() : Fragment(), Parcelable {
+    var book: Book? = null
+    var parentActivity: ItemDetailFragmentInterface? = null
+    var setRescources = false
+    var textViewBook: TextView? = null
+    var textViewAuthor: TextView? = null
+
+    constructor(parcel: Parcel) : this() {
+        book = parcel.readParcelable(Book::class.java.classLoader)
+        setRescources = parcel.readByte() != 0.toByte()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
+        if (savedInstanceState == null) { // if there is no saved data
+            if (arguments != null) {
+                this.book = requireArguments().getParcelable("newbook")
+                this.setRescources = requireArguments().getBoolean("yes")
+            }
+        } else { //using saved instance state
+            if (arguments != null) {
+                this.book = savedInstanceState.getParcelable("savebook")
+                this.setRescources = savedInstanceState.getBoolean("yes")
+            }
         }
+    }
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+            if (context is ItemDetailFragmentInterface) { //check if activity has the interface implement
+                parentActivity = context //storing a reference to parent here in memory
+            } else { // if not implemented, Tell them to in error
+                throw RuntimeException("Please Implement the Item List Interface before attaching this fragment")
+            }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) { //change saved state so that it saves the things you want it to
+        super.onSaveInstanceState(outState)
+        outState.putParcelable("savebook", book)
+        outState.putBoolean("yes", setRescources)
     }
 
     override fun onCreateView(
@@ -34,26 +57,60 @@ class BookDetailsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_book_details, container, false)
+        val layout: View = inflater.inflate(R.layout.fragment_book_details, container, false)
+        this.textViewBook = layout.findViewById<TextView>(R.id.bookShow)
+        this.textViewAuthor = layout.findViewById<TextView>(R.id.authorShow)
+        book?.let { displayBook(it) }
+        return layout
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment BookDetailsFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            BookDetailsFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+
     }
+
+    override fun onDetach() { // on detach is used to stop storing the context parent,
+        // to stop memory leaks required
+        super.onDetach()
+        parentActivity = null
+    }
+
+    fun displayBook(Book: Book): BookDetailsFragment {
+        book = Book
+        textViewBook!!.gravity = View.TEXT_ALIGNMENT_CENTER
+        textViewAuthor!!.gravity = View.TEXT_ALIGNMENT_CENTER
+        textViewBook!!.setText(book!!.title)
+        textViewAuthor!!.setText(book!!.author)
+        textViewBook!!.textSize = 30f
+        textViewAuthor!!.textSize = 24f
+        textViewBook!!.textSize = 25f
+        textViewAuthor!!.textSize = 20f
+        textViewAuthor!!.setPadding(0, 0, 0, 0)
+        textViewBook!!.setPadding(0, 0, 0, 0)
+        setRescources = true
+        return this
+    }
+
+    interface ItemDetailFragmentInterface
+
+    override fun writeToParcel(parcel: Parcel, flags: Int) {
+        parcel.writeParcelable(book, flags)
+        parcel.writeByte(if (setRescources) 1 else 0)
+    }
+
+    override fun describeContents(): Int {
+        return 0
+    }
+
+    companion object CREATOR : Parcelable.Creator<BookDetailsFragment> {
+        override fun createFromParcel(parcel: Parcel): BookDetailsFragment {
+            return BookDetailsFragment(parcel)
+        }
+
+        override fun newArray(size: Int): Array<BookDetailsFragment?> {
+            return arrayOfNulls(size)
+        }
+    }
+
 }
